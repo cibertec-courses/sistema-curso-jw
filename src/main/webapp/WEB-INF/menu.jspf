@@ -1,0 +1,36 @@
+<%@ page pageEncoding="UTF-8" %>
+
+<%--- Fragmento del Menu -> Va ir en varias paginas --%>
+
+<%
+// Detecta en que pagina estamos para resaltar el tab correcto
+	String menuUri = request.getRequestURI();
+	boolean menuInicio = menuUri.endsWith("/") || menuUri.endsWith("cursos-bootstrap.jsp");
+	boolean menuMant = menuUri.endsWith("CursoServlet.jsp")
+	|| menuUri.endsWith("DocenteServlet") || menuUri.endsWith("gestion-cursos.jsp")
+	|| menuUri.endsWith("listaDocente.jsp") || menuUri.endsWith("registroDocente.jsp");
+%>
+
+<header class="mb-3">
+	<nav>
+		<ul class="nav nav-tabs">
+			<li class="nav-item">
+				<a class="nav-link <%= menuInicio ? "active" : "" %>" href="index.jsp"> Principal  </a>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle <%= menuMant ? "active" : "" %>" data-bs-toggle="dropdown" href="#" role="button">Mantenedores</a>
+		        <ul class="dropdown-menu">
+		          <li><a class="dropdown-item" href="CursoServlet.jsp">Cursos</a></li>
+		          <li><a class="dropdown-item" href="DocenteServlet.jsp">Docente</a></li>
+				</ul>
+			</li>
+		    <li class="nav-item">
+		      <a class="nav-link" href="curso.jsp">Reportes</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link disabled" aria-disabled="true">Soporte</a>
+		    </li>
+			
+		</ul>
+	</nav>
+</header>
