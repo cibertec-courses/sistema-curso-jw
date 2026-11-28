@@ -6,7 +6,9 @@
 // Detecta en que pagina estamos para resaltar el tab correcto
 	String menuUri = request.getRequestURI();
 	boolean menuInicio = menuUri.endsWith("/") || menuUri.endsWith("index.jsp");
-	boolean menuMant = menuUri.endsWith("CursoServlet") || menuUri.endsWith("DocenteServlet");
+	boolean menuMant = menuUri.endsWith("gestion-cursos.jsp")
+			|| menuUri.endsWith("listaDocente.jsp")
+			|| menuUri.endsWith("registroDocente.jsp");
 %>
 
 <header class="mb-3">
@@ -28,6 +30,18 @@
 		    <li class="nav-item">
 		      <a class="nav-link disabled" aria-disabled="true">Soporte</a>
 		    </li>
+		    
+		   <li class="nav-item dropdown ms-auto">
+				<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
+					${sessionScope.usuarioLogueado.nombreCompleto}
+					<span class="badge text-bg-secondary">${sessionScope.usuarioLogueado.rol.nombre}</span>
+				</a>
+				<ul class="dropdown-menu dropdown-menu-end">
+					<li><a class="dropdown-item" href="UsuarioServlet?type=misdatos">Mis datos</a></li>
+					<li><hr class="dropdown-divider"></li>
+					<li><a class="dropdown-item text-danger" href="LoginServlet?type=logout">Cerrar sesión</a></li>
+				</ul>
+			</li>
 			
 		</ul>
 	</nav>

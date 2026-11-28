@@ -1,11 +1,10 @@
 package modelo;
 
-import java.sql.Timestamp;
-import java.lang.foreign.ValueLayout;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import entidades.Docente;
 import entidades.Rol;
@@ -17,7 +16,6 @@ public class UsuarioModel implements UsuarioInterface {
 
 	@Override
 	public Usuario login(String usuario, String clave) {
-		// TODO Auto-generated method stub
 		Usuario u = null;
 
 		try (Connection cn = MySQLConnection.getConnection();
@@ -33,7 +31,6 @@ public class UsuarioModel implements UsuarioInterface {
 			}
 
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 
@@ -43,15 +40,13 @@ public class UsuarioModel implements UsuarioInterface {
 
 	@Override
 	public int registrarAcceso(int idUsuario) {
-		// TODO Auto-generated method stub
 		int value =0;
 		try (Connection cn = MySQLConnection.getConnection();
-				CallableStatement cs = cn.prepareCall("{call sp_registrar_acceso (?) ")) {
+				CallableStatement cs = cn.prepareCall("{call sp_registrar_acceso(?)}")) {
 			cs.setInt(1, idUsuario);
 			value = cs.executeUpdate();
 			
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return value;
@@ -59,7 +54,6 @@ public class UsuarioModel implements UsuarioInterface {
 
 	@Override
 	public Usuario obtenerUsuario(int idUsuario) {
-		// TODO Auto-generated method stub
 		Usuario u = null;
 
 		try (Connection cn = MySQLConnection.getConnection();
@@ -74,7 +68,6 @@ public class UsuarioModel implements UsuarioInterface {
 			}
 
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return u;
@@ -82,10 +75,9 @@ public class UsuarioModel implements UsuarioInterface {
 
 	@Override
 	public int actualizarDatos(Usuario usuario) {
-		// TODO Auto-generated method stub
 		int value = 0;
 		try (Connection cn = MySQLConnection.getConnection();
-				CallableStatement cs = cn.prepareCall("{call sp_actualizar_datos_usuario (?,?,?,?) ")) {
+				CallableStatement cs = cn.prepareCall("{call sp_actualizar_datos_usuario(?,?,?,?)}")) {
 			cs.setInt(1, usuario.getIdUsuario());
 			cs.setString(2,usuario.getNombres());
 			cs.setString(3,usuario.getApellidos());
@@ -93,7 +85,6 @@ public class UsuarioModel implements UsuarioInterface {
 			value = cs.executeUpdate();
 			
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return value;

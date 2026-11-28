@@ -1,6 +1,7 @@
 package entidades;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Usuario {
 	
@@ -67,6 +68,16 @@ public class Usuario {
 	public void setUltimoAcceso(LocalDateTime ultimoAcceso) {
 		this.ultimoAcceso = ultimoAcceso;
 	}
-	
-	
+
+	public String getNombreCompleto() {
+		return nombres + " " + apellidos;
+	}
+
+	public String getUltimoAccesoTexto() {
+		if (ultimoAcceso == null) {
+			return "Primer acceso";
+		}
+		return ultimoAcceso.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+	}
+
 }
