@@ -1,12 +1,17 @@
 package entidades;
 
 public class Curso {
-	
-	public int getidCurso() {
+
+	private int idCurso;
+	private String codigo;
+	private String nombre;
+	private String nivel;
+	private Docente docente;
+	public int getIdCurso() {
 		return idCurso;
 	}
-	public void setidCurso(int curso) {
-		idCurso = curso;
+	public void setIdCurso(int idCurso) {
+		this.idCurso = idCurso;
 	}
 	public String getCodigo() {
 		return codigo;
@@ -26,16 +31,13 @@ public class Curso {
 	public void setNivel(String nivel) {
 		this.nivel = nivel;
 	}
-	public String getProfesor() {
-		return profesor;
+	public Docente getDocente() {
+		return docente;
 	}
-	public void setProfesor(String profesor) {
-		this.profesor = profesor;
+	public void setDocente(Docente docente) {
+		this.docente = docente;
 	}
-	private int idCurso;
-	private String codigo;
-	private String nombre;
-	private String nivel;
-	private String profesor;
+	
+	
 	
 }

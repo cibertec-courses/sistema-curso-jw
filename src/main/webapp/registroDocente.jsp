@@ -20,13 +20,12 @@
 
 	String nombre       = valor(request.getParameter("txtNombre"),       docente != null ? docente.getNombreCompleto() : null);
 	String correo       = valor(request.getParameter("txtCorreo"),       docente != null ? docente.getCorreo() : null);
-	String especialidad = valor(request.getParameter("txtEspecialidad"), docente != null ? docente.getEspecialidad() : null);
+	String especialidad = valor(request.getParameter("txtEspecialidad"), docente != null ? String.valueOf(docente.getEspecialidad().getIdEspecialidad()) : null);
 	String horas        = valor(request.getParameter("txtHoras"),        docente != null ? String.valueOf(docente.getHorasSemanales()) : null);
 	String tarifa       = valor(request.getParameter("txtTarifa"),       docente != null ? String.format(Locale.US, "%.2f", docente.getTarifaHora()) : null);
 	String fecha        = valor(request.getParameter("txtFecha"),        docente != null ? docente.getFechaIngreso().toString() : null);
 
 	String hoy = LocalDate.now().toString();
-	///String[] especialidades = {"Programación", "Base de Datos", "Redes", "Diseño Web"};
 	@SuppressWarnings("unchecked")
 	List<Especialidad> especialidades = (List<Especialidad>) request.getAttribute("especialidades");
 	
@@ -62,7 +61,7 @@
 					</div>
 					<% } %>
 
-					<form action="ServletDocente" method="post" id="formDocente"
+					<form action="DocenteServlet" method="post" id="formDocente"
 						novalidate>
 						<input type="hidden" name="type"
 							value="<%= editando ? "update" : "register" %>"> <input
@@ -88,8 +87,8 @@
 								<option value="">-- Seleccione --</option>
 								<%  if (especialidades != null){
 								for (Especialidad esp : especialidades) { %>
-								<option value="<%= esp.getNombre() %>"
-									<%= esp.getNombre().equals(especialidad) ? "selected" : "" %>><%= esp.getNombre() %></option>
+								<option value="<%= esp.getIdEspecialidad() %>"
+									<%= String.valueOf(esp.getIdEspecialidad()).equals(especialidad) ? "selected" : "" %>><%= esp.getNombre() %></option>
 								<% }
 								}%>
 							</select>
@@ -115,7 +114,7 @@
 						</div>
 
 						<button type="submit" class="btn btn-primary"><%= editando ? "Actualizar" : "Registrar" %></button>
-						<a href="ServletDocente?type=list" class="btn btn-secondary">Volver
+						<a href="DocenteServlet?type=list" class="btn btn-secondary">Volver
 							al listado</a>
 					</form>
 
@@ -157,9 +156,8 @@
 			return this.optional(element) || /^\d{1,3}\.\d{2}$/.test(value);
 		});
 		$.validator.addMethod("noFutura", function(value, element) {
-			return this.optional(element) || value <= "<%= hoy %>
-		";
-			});
+			return this.optional(element) || value <= "<%= hoy %>";
+		});
 
 			$("#formDocente")
 					.validate(
@@ -228,6 +226,10 @@
 									form.submit();
 								}
 							});
+
+			$("#formDocente").on("change", "input, select", function() {
+				$(this).valid();
+			});
 		});
 	</script>
 </body>

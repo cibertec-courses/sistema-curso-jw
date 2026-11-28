@@ -7,11 +7,10 @@ public class Docente {
 	private int idDocente;
 	private String nombreCompleto;
 	private String correo;
-	private String especialidad;
+	private Especialidad especialidad;
 	private int horasSemanales; 
 	private double tarifaHora;
 	private LocalDate fechaIngreso;
-	
 	public int getIdDocente() {
 		return idDocente;
 	}
@@ -30,10 +29,10 @@ public class Docente {
 	public void setCorreo(String correo) {
 		this.correo = correo;
 	}
-	public String getEspecialidad() {
+	public Especialidad getEspecialidad() {
 		return especialidad;
 	}
-	public void setEspecialidad(String especialidad) {
+	public void setEspecialidad(Especialidad especialidad) {
 		this.especialidad = especialidad;
 	}
 	public int getHorasSemanales() {
@@ -54,5 +53,7 @@ public class Docente {
 	public void setFechaIngreso(LocalDate fechaIngreso) {
 		this.fechaIngreso = fechaIngreso;
 	}
+	
+	
 
 }

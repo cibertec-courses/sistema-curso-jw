@@ -1,7 +1,6 @@
 package servlet;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,99 +10,115 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.DAOFactory;
 import entidades.Curso;
+import entidades.Docente;
 import interfaces.CursoInterface;
-import modelo.CursoModel;
+import interfaces.DocenteInterface;
 
-/**
- * Servlet implementation class CursoServlet
- */
 @WebServlet("/CursoServlet")
 public class CursoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private CursoInterface modelo = DAOFactory.getDaoFactory(DAOFactory.MYSQL).getCurso();
-
-
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public CursoServlet() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
+	private DAOFactory fabrica = DAOFactory.getDaoFactory(DAOFactory.MYSQL);
+	private CursoInterface modelo = fabrica.getCurso();
+	private DocenteInterface docenteModelo = fabrica.getDocente();
 
 	@Override
-	protected void service ( HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
 		String type = request.getParameter("type");
-		if(type == null) {
+		if (type == null) {
 			type = "list";
 		}
 
 		switch (type) {
-		case "list": 
+		case "list":
 			listarCursos(request, response);
 			break;
-		case "register": 
-			registarCursos(request, response);
+		case "register":
+			registrarCurso(request, response);
+			break;
+		case "get":
+			obtenerCurso(request, response);
+			break;
+		case "update":
+			actualizarCurso(request, response);
+			break;
+		case "delete":
+			eliminarCurso(request, response);
 			break;
 		default:
-			request.setAttribute("mensaje", "Opcion no valida: "+ type);
+			request.setAttribute("mensaje", "Opcion no valida: " + type);
 			listarCursos(request, response);
 		}
 	}
 
-
-	private void listarCursos( HttpServletRequest request, HttpServletResponse response)  throws ServletException, IOException{
-		List<Curso>  data = modelo.listarCursos();
-		request.setAttribute("data",data);
+	private void listarCursos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("data", modelo.listarCursos());
+		if (docenteModelo != null) {
+			request.setAttribute("docentes", docenteModelo.listarDocente());
+		}
 		request.getRequestDispatcher("gestion-cursos.jsp").forward(request, response);
 	}
 
+	private void registrarCurso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Curso curso = leerFormularioCurso(request);
 
-	private void registarCursos( HttpServletRequest request, HttpServletResponse response)  throws ServletException, IOException{
-
-		/// 1. Entradas del formulario (name de los input)
-		String codigo = request.getParameter("txtCodigo");
-		String nombre = request.getParameter("txtNombre");
-		String nivel = request.getParameter("txtNivel");
-		String profesor = request.getParameter("txtProfesor");
-
-		// 2. Crear obj
-		Curso curso =  new Curso();
-		curso.setCodigo(codigo);
-		curso.setNombre(nombre);
-		curso.setNivel(nivel);
-		curso.setProfesor(profesor);
-
-		int value = modelo.registarCurso(curso);
-
-		if(value == 1 ) {
-			request.setAttribute("exito", "Curso "+ codigo + "  registrado correctamente ");
-
-		}else {
-			request.setAttribute("mensaje", "Ocurrio un problema: no se pudo registrar curso.");
+		if (modelo.registarCurso(curso) == 1) {
+			request.setAttribute("exito", "Curso " + curso.getCodigo() + " registrado correctamente.");
+		} else {
+			request.setAttribute("mensaje", "Ocurrio un problema: no se pudo registrar el curso (codigo repetido o docente no valido).");
+			request.setAttribute("curso", curso);
 		}
 		listarCursos(request, response);
 	}
 
+	private void obtenerCurso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		Curso curso = modelo.obtenerCurso(id);
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		if (curso == null) {
+			request.setAttribute("mensaje", "No existe curso con el ID " + id);
+		} else {
+			request.setAttribute("curso", curso);
+		}
+		listarCursos(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+	private void actualizarCurso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Curso curso = leerFormularioCurso(request);
+		curso.setIdCurso(Integer.parseInt(request.getParameter("txtId")));
+
+		if (modelo.actualizarCurso(curso) == 1) {
+			request.setAttribute("exito", "Curso " + curso.getCodigo() + " actualizado correctamente.");
+		} else {
+			request.setAttribute("mensaje", "Ocurrio un problema: no se pudo actualizar el curso (codigo repetido o docente no valido).");
+			request.setAttribute("curso", curso);
+		}
+		listarCursos(request, response);
+	}
+
+	private void eliminarCurso(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+
+		if (modelo.eliminarCurso(id) == 1) {
+			request.setAttribute("exito", "Curso eliminado correctamente.");
+		} else {
+			request.setAttribute("mensaje", "No se pudo eliminar el curso.");
+		}
+		listarCursos(request, response);
+	}
+
+	private Curso leerFormularioCurso(HttpServletRequest request) {
+		Docente docente = new Docente();
+		docente.setIdDocente(Integer.parseInt(request.getParameter("txtDocente")));
+
+		Curso curso = new Curso();
+		curso.setCodigo(request.getParameter("txtCodigo"));
+		curso.setNombre(request.getParameter("txtNombre"));
+		curso.setNivel(request.getParameter("txtNivel"));
+		curso.setDocente(docente);
+		return curso;
 	}
 
 }

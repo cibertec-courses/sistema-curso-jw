@@ -16,7 +16,6 @@ import dao.DAOFactory;
 import entidades.Docente;
 import entidades.Especialidad;
 import interfaces.DocenteInterface;
-import modelo.DocenteModel;
 
 /**
  * Servlet implementation class ServletDocente
@@ -25,22 +24,14 @@ import modelo.DocenteModel;
 public class DocenteSevlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private DocenteInterface model =DAOFactory.getDaoFactory(DAOFactory.MYSQL).getDocente();
-
-	// VALORES TEMPORALES
-
+	private DocenteInterface model = DAOFactory.getDaoFactory(DAOFactory.MYSQL).getDocente();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public DocenteSevlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-
-	private static final List<String> ESPECIALIDADES = 
-			List.of("Programación", "Base de Datos", "Redes", "Diseño Web");
-
 
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -190,10 +181,13 @@ public class DocenteSevlet extends HttpServlet {
 		String especialidad = limpiar(request.getParameter("txtEspecialidad"));
 		if(especialidad.isEmpty()) {
 			errores.add("La especialidad es obligatoria");
-		}else if (!esEspecialidadValida(especialidad)) {
+		}else if (!especialidad.matches("^\\d+$") || !esEspecialidadValida(Integer.parseInt(especialidad))) {
 			errores.add("Especialidad no permitida");
+		}else {
+			Especialidad e = new Especialidad();
+			e.setIdEspecialidad(Integer.parseInt(especialidad));
+			d.setEspecialidad(e);
 		}
-		d.setEspecialidad(especialidad);
 
 		// Validar Horas Semanales
 
@@ -246,9 +240,9 @@ public class DocenteSevlet extends HttpServlet {
 		return d;
 
 	}
-	private boolean esEspecialidadValida(String nombre) {
+	private boolean esEspecialidadValida(int idEspecialidad) {
 		for (Especialidad e: model.listarEspecialidades()) {
-			if(e.getNombre().equals(nombre)) {
+			if(e.getIdEspecialidad() == idEspecialidad) {
 				return true;
 			}
 		}

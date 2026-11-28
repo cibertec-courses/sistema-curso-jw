@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 
 public class MySQLConnection {
 
-	private static final String URL = "jdbc:mysql://localhost:3306/BD_SistemaCurso"
+	private static final String URL = "jdbc:mysql://100.65.41.105:3306/BD_SistemaCurso"
 			+ "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Lima";
 	
 	private static final String USR = "root";
@@ -24,6 +24,10 @@ public class MySQLConnection {
 		catch (Exception e) {
 			System.out.println("Error >> de conexion con la BD; " + e.getMessage());
 		}
+		
 		return con;
+		
 	}
+	
+	
 }

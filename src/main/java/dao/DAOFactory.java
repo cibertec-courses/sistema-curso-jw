@@ -21,7 +21,7 @@ public abstract class DAOFactory {
 		case MYSQL:
 			return new MysqlDAOFactory();
 		case SQLSERVER:
-			return null;
+			return new SQLServerDAOFactory();
 			
 		case ORACLE:
 			return null;

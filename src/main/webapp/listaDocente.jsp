@@ -39,7 +39,7 @@ DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	<%
 	if (mensaje != null) {
 	%>
-	<div class="alert alert-success">
+	<div class="alert alert-danger">
 		<%=mensaje%></div>
 	<%
 	}
@@ -47,7 +47,7 @@ DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 	<div class="d-flex justify-content-between align-items-center mb-3">
 		<h3>Lista Docentes</h3>
-		<a href="DocenteServlet?type=new" class="btn btn-primry">Nuevo
+		<a href="DocenteServlet?type=new" class="btn btn-primary">Nuevo
 			Docente</a>
 	</div>
 
@@ -84,7 +84,7 @@ DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 						<td><%= d.getIdDocente() %></td>
 						<td><%= d.getNombreCompleto() %></td>
 						<td><%= d.getCorreo() %></td>
-						<td><%= d.getEspecialidad() %></td>
+						<td><%= d.getEspecialidad().getNombre() %></td>
 						<td class="text-end"><%= d.getHorasSemanales() %></td>
 						<td class="text-end"><%= String.format("%.2f", d.getTarifaHora()) %></td>
 						<td><%= d.getFechaIngreso().format(formatoFecha) %></td>
@@ -98,8 +98,9 @@ DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 				<%}%>
 			</tbody>
 		</table>
+	</div>
 
-		<script
+	<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
