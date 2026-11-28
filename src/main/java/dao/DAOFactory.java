@@ -2,6 +2,7 @@ package dao;
 
 import interfaces.CursoInterface;
 import interfaces.DocenteInterface;
+import interfaces.UsuarioInterface;
 
 public abstract class DAOFactory {
 	/// Constantes que definen las fuentes datos 
@@ -14,6 +15,7 @@ public abstract class DAOFactory {
 	
 	public abstract CursoInterface getCurso();
 	public abstract DocenteInterface getDocente();
+	public abstract UsuarioInterface getUsuario();
 	
 	public static DAOFactory getDaoFactory (int tipo) {
 		// TODO Auto-generated constructor stub
